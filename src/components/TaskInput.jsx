@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
 import { addTask } from "../features/tasks/taskSlice";
 const TaskInput = () => {
   const [text, setText] = useState("");
@@ -7,11 +8,25 @@ const TaskInput = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (text.trim()) {
-      alert(`Task added: ${text.trim()}`);
-      dispatch(addTask(text.trim()));
-      setText("");
+    //    give sweet alert using sweetalert2 after adding task
+    if (text.trim() === "") {
+      Swal.fire({
+        title: "Error",
+        text: "Please enter a task",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
     }
+    dispatch(addTask(text));
+    setText("");
+    // show success message
+    Swal.fire({
+      title: "Task Added",
+      text: "Your task has been added successfully!",
+      icon: "success",
+      confirmButtonText: "OK",
+    });
   };
 
   return (

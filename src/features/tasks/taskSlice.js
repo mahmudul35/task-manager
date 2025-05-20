@@ -1,9 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
-import {
-  getTasksFromStorage,
-  saveTasksToStorage,
-} from "../../utils/localStorageHelpers";
+import { getTasksFromStorage } from "../../utils/localStorageHelpers";
 
 const initialState = {
   list: getTasksFromStorage(),
@@ -21,10 +18,19 @@ const taskSlice = createSlice({
         completed: false,
       };
       state.list.unshift(newTask);
-      saveTasksToStorage(state.list);
+    },
+    toggleTask: (state, action) => {
+      const task = state.list.find((t) => t.id === action.payload);
+      if (task) task.completed = !task.completed;
+    },
+    deleteTask: (state, action) => {
+      state.list = state.list.filter((t) => t.id !== action.payload);
+    },
+    setFilter: (state, action) => {
+      state.filter = action.payload;
     },
   },
 });
 
-export const { addTask } = taskSlice.actions;
+export const { addTask, toggleTask, deleteTask, setFilter } = taskSlice.actions;
 export default taskSlice.reducer;
